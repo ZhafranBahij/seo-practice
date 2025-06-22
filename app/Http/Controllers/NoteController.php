@@ -6,9 +6,10 @@ use App\Models\Note;
 use App\Http\Requests\StoreNoteRequest;
 use App\Http\Requests\UpdateNoteRequest;
 use Illuminate\Http\Request;
-
+use Artesaos\SEOTools\Traits\SEOTools;
 class NoteController extends Controller
 {
+    use SEOTools;
     /**
      * Display a listing of the resource.
      */
@@ -50,6 +51,14 @@ class NoteController extends Controller
     public function show(Note $note)
     {
         $data = $note;
+        // SEO
+        $this->seo()->setTitle($data->title)
+                    ->setDescription($data->description)
+                    ->opengraph()
+                        ->setType('article')
+                        ->setUrl(route('note.show', $data->id))
+                        ->addImage('https://pbs.twimg.com/media/GtspJcnXcAAFAAg?format=jpg&name=large');
+
         return view('note.show', compact('data'));
     }
 
